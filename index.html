@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Día del Padre 🌿</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;600&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0a1a0f;
+    font-family: 'Inter', sans-serif;
+    color: #e8f5e9;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ===== LOADER ===== */
+  #loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #061208;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+  }
+  #loader.fade-out { opacity:0; pointer-events:none; }
+
+  .loader-jungle {
+    position: relative;
+    width: 220px;
+    height: 200px;
+    margin-bottom: 24px;
+  }
+
+  .butterfly {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: butterflyFloat 3s ease-in-out infinite;
+  }
+  @keyframes butterflyFloat {
+    0%,100% { transform: translateX(-50%) translateY(0) rotate(-5deg); }
+    50% { transform: translateX(-50%) translateY(-18px) rotate(5deg); }
+  }
+  .wing {
+    display: inline-block;
+    width: 36px;
+    height: 28px;
+    border-radius: 50% 50% 30% 30%;
+    background: #1565c0;
+    position: relative;
+    overflow: hidden;
+  }
+  .wing::after {
+    content:'';
+    position:absolute;
+    inset:3px;
+    border-radius:50% 50% 30% 30%;
+    background: linear-gradient(135deg,#42a5f5,#0d47a1);
+    animation: wingShimmer 0.5s ease-in-out infinite alternate;
+  }
+  @keyframes wingShimmer {
+    from { opacity:0.7; }
+    to { opacity:1; }
+  }
+  .wing.left { transform: scaleX(-1) rotate(-20deg); animation: flapLeft 0.5s ease-in-out infinite alternate; }
+  .wing.right { transform: rotate(-20deg); animation: flapRight 0.5s ease-in-out infinite alternate; }
+  @keyframes flapLeft {
+    from { transform: scaleX(-1) rotate(-20deg); }
+    to { transform: scaleX(-1) rotate(20deg); }
+  }
+  @keyframes flapRight {
+    from { transform: rotate(-20deg); }
+    to { transform: rotate(20deg); }
+  }
+  .butterfly-body {
+    width: 6px; height: 30px;
+    background: #333;
+    border-radius: 3px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 4px;
+  }
+
+  .loader-progress {
+    width: 200px;
+    height: 4px;
+    background: #1a3a1a;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .loader-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #2e7d32, #66bb6a, #a5d6a7);
+    border-radius: 2px;
+    animation: loadBar 3s ease-in-out forwards;
+  }
+  @keyframes loadBar {
+    0% { width: 0%; }
+    30% { width: 40%; }
+    60% { width: 70%; }
+    85% { width: 90%; }
+    100% { width: 100%; }
+  }
+  .loader-text {
+    font-size: 13px;
+    color: #81c784;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: textPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes textPulse {
+    0%,100% { opacity:0.6; }
+    50% { opacity:1; }
+  }
+
+  .particles {
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .particle {
+    position:absolute;
+    width: 6px;
+    height: 10px;
+    background: #2e7d32;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.6;
+    animation: fallLeaf linear infinite;
+  }
+  @keyframes fallLeaf {
+    0% { transform: translateY(-20px) rotate(0deg); opacity:0.8; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity:0; }
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  #main { display: none; }
+  #main.visible { display: block; }
+
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 20px 0;
+  }
+
+  .sky {
+    position:absolute;
+    inset:0;
+    background: linear-gradient(180deg,
+      #0d2137 0%,
+      #1a3a5c 30%,
+      #1e6b5e 55%,
+      #0d4a3a 70%,
+      #071f14 100%
+    );
+  }
+
+  .sun {
+    position:absolute;
+    top: 80px;
+    right: 40px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff7a1, #ffd54f, #ff8f00);
+    box-shadow: 0 0 30px #ffd54f, 0 0 60px #ff8f0088;
+    animation: sunPulse 4s ease-in-out infinite;
+  }
+  @keyframes sunPulse {
+    0%,100% { box-shadow: 0 0 30px #ffd54f, 0 0 60px #ff8f0088; transform:scale(1); }
+    50% { box-shadow: 0 0 50px #ffd54f, 0 0 100px #ff8f00aa; transform:scale(1.05); }
+  }
+
+  .stars { position:absolute; inset:0; overflow:hidden; }
+  .star {
+    position:absolute;
+    width: 2px; height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity:0.2; }
+    50% { opacity:1; }
+  }
+
+  .sea {
+    position:absolute;
+    bottom: 0;
+    left:0; right:0;
+    height: 200px;
+  }
+  .wave {
+    position:absolute;
+    bottom:0;
+    left:-50%;
+    width:200%;
+    border-radius: 40%;
+  }
+  .wave1 { height:100px; background:rgba(21,101,192,0.35); animation:waveAnim 6s linear infinite; }
+  .wave2 { height:80px; background:rgba(21,101,192,0.25); animation:waveAnim 8s linear infinite reverse; bottom:10px; }
+  .wave3 { height:60px; background:rgba(0,150,136,0.3); animation:waveAnim 5s linear infinite; bottom:20px; }
+  @keyframes waveAnim {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .jungle-silhouette {
+    position:absolute;
+    bottom: 60px;
+    left:0; right:0;
+    display:flex;
+    align-items:flex-end;
+    pointer-events:none;
+  }
+
+  .hero-content { position:relative; z-index:10; padding: 0 20px; max-width: 400px; margin: 0 auto; }
+
+  .hero-badge {
+    display:inline-block;
+    background:rgba(46,125,50,0.8);
+    border:1px solid #66bb6a;
+    color:#c8e6c9;
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    padding:6px 16px;
+    border-radius:20px;
+    margin-bottom:20px;
+    animation:fadeInDown 1s ease 0.5s both;
+  }
+  .hero-title {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(32px,8vw,52px);
+    font-weight:700;
+    line-height:1.15;
+    color:#e8f5e9;
+    margin-bottom:8px;
+    animation:fadeInDown 1s ease 0.8s both;
+    text-shadow:0 2px 20px rgba(0,0,0,0.5);
+  }
+  .hero-subtitle {
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:clamp(16px,4vw,22px);
+    color:#a5d6a7;
+    margin-bottom:24px;
+    animation:fadeInDown 1s ease 1s both;
+  }
+  .hero-name {
+    font-size:clamp(28px,7vw,44px);
+    font-weight:600;
+    color:#ffd54f;
+    margin-bottom:12px;
+    animation:fadeInDown 1s ease 1.2s both;
+    text-shadow:0 0 30px #ffd54f66;
+  }
+  .hero-desc {
+    font-size:15px;
+    color:#81c784;
+    line-height:1.7;
+    max-width:340px;
+    margin:0 auto 32px;
+    animation:fadeInDown 1s ease 1.4s both;
+  }
+  .scroll-hint {
+    position:relative;
+    z-index:10;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    color:#81c784;
+    font-size:12px;
+    letter-spacing:1px;
+    animation:bounce 2s ease-in-out infinite, fadeInDown 1s ease 2s both;
+    margin-top: 32px;
+    padding-bottom: 140px;
+  }
+  @keyframes bounce {
+    0%,100% { transform:translateX(-50%) translateY(0); }
+    50% { transform:translateX(-50%) translateY(8px); }
+  }
+  .scroll-arrow {
+    width:20px; height:20px;
+    border-right:2px solid #81c784;
+    border-bottom:2px solid #81c784;
+    transform:rotate(45deg);
+  }
+  @keyframes fadeInDown {
+    from { opacity:0; transform:translateY(-20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  .animal-hero { position:absolute; z-index:8; pointer-events:none; }
+  .toucan { top:30px; left:10px; animation:toucanBob 3s ease-in-out infinite; }
+  @keyframes toucanBob {
+    0%,100% { transform:translateY(0) rotate(-5deg); }
+    50% { transform:translateY(-12px) rotate(5deg); }
+  }
+  .monkey { top:60px; right:6px; animation:monkeySwing 2.5s ease-in-out infinite; }
+  @keyframes monkeySwing {
+    0%,100% { transform:rotate(-15deg); }
+    50% { transform:rotate(15deg); }
+  }
+  .morpho { top:10px; left:50%; animation:morphoFly 5s ease-in-out infinite; }
+  @keyframes morphoFly {
+    0% { transform:translateX(-50%) translateY(0); }
+    25% { transform:translateX(-20%) translateY(-30px); }
+    50% { transform:translateX(20%) translateY(10px); }
+    75% { transform:translateX(-30%) translateY(-20px); }
+    100% { transform:translateX(-50%) translateY(0); }
+  }
+
+  section { padding:60px 20px; position:relative; overflow:hidden; }
+  .section-label { text-align:center; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#66bb6a; margin-bottom:12px; }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(24px,6vw,36px); text-align:center; color:#e8f5e9; margin-bottom:8px; line-height:1.3; }
+  .section-divider { width:60px; height:3px; background:linear-gradient(90deg,transparent,#2e7d32,transparent); margin:0 auto 36px; }
+
+  .animals-bg { background:linear-gradient(180deg,#0a1a0f,#071810); }
+
+  .animal-cards { display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:400px; margin:0 auto; }
+  .animal-card {
+    background:rgba(20,50,25,0.6);
+    border:1px solid rgba(102,187,106,0.2);
+    border-radius:16px;
+    padding:20px 12px;
+    text-align:center;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .animal-card::before {
+    content:'';
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 50% 0%,rgba(102,187,106,0.1),transparent 70%);
+    opacity:0;
+    transition:opacity 0.3s;
+  }
+  .animal-card:hover::before, .animal-card.active::before { opacity:1; }
+  .animal-card:hover, .animal-card.active { border-color:rgba(102,187,106,0.5); transform:translateY(-4px); }
+  .animal-icon { font-size:48px; display:block; margin-bottom:8px; animation:animalIdle 3s ease-in-out infinite; }
+  .animal-card:nth-child(2) .animal-icon { animation-delay:0.5s; }
+  .animal-card:nth-child(3) .animal-icon { animation-delay:1s; }
+  .animal-card:nth-child(4) .animal-icon { animation-delay:1.5s; }
+  .animal-card:nth-child(5) .animal-icon { animation-delay:2s; }
+  .animal-card:nth-child(6) .animal-icon { animation-delay:2.5s; }
+  @keyframes animalIdle {
+    0%,100% { transform:scale(1); }
+    50% { transform:scale(1.08) rotate(3deg); }
+  }
+  .animal-name { font-size:13px; font-weight:600; color:#c8e6c9; margin-bottom:4px; }
+  .animal-latin { font-size:11px; font-style:italic; color:#4caf50; }
+  .animal-info {
+    background:rgba(20,50,25,0.8);
+    border:1px solid rgba(102,187,106,0.3);
+    border-radius:12px;
+    padding:16px;
+    margin-top:20px;
+    max-width:400px;
+    margin-left:auto;
+    margin-right:auto;
+    display:none;
+    animation:slideUp 0.4s ease;
+  }
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  .animal-info.visible { display:block; }
+  .animal-info-title { font-size:16px; font-weight:600; color:#a5d6a7; margin-bottom:8px; }
+  .animal-info-text { font-size:13px; color:#81c784; line-height:1.7; }
+
+  .message-bg { background:linear-gradient(180deg,#071810,#0d1f0a); }
+  .message-card {
+    max-width:380px;
+    margin:0 auto;
+    background:rgba(30,70,35,0.5);
+    border:1px solid rgba(102,187,106,0.25);
+    border-radius:20px;
+    padding:32px 24px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .message-card::after {
+    content:'"';
+    position:absolute;
+    top:-20px; left:20px;
+    font-size:120px;
+    font-family:'Playfair Display',serif;
+    color:rgba(102,187,106,0.08);
+    line-height:1;
+    pointer-events:none;
+  }
+  .message-emoji { font-size:52px; display:block; margin-bottom:16px; animation:heartBeat 1.5s ease-in-out infinite; }
+  @keyframes heartBeat {
+    0%,100% { transform:scale(1); }
+    14% { transform:scale(1.2); }
+    28% { transform:scale(1); }
+    42% { transform:scale(1.15); }
+    70% { transform:scale(1); }
+  }
+  .message-text {
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:clamp(15px,4vw,18px);
+    color:#c8e6c9;
+    line-height:1.8;
+    margin-bottom:20px;
+  }
+  .message-signature { font-size:13px; color:#66bb6a; letter-spacing:1px; }
+
+  .facts-bg { background:linear-gradient(180deg,#0d1f0a,#061208); }
+  .facts-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:400px; margin:0 auto; }
+  .fact-card { background:rgba(6,40,10,0.8); border:1px solid rgba(46,125,50,0.3); border-radius:14px; padding:20px 16px; text-align:center; }
+  .fact-number { font-family:'Playfair Display',serif; font-size:clamp(28px,7vw,40px); color:#66bb6a; font-weight:700; line-height:1; margin-bottom:6px; }
+  .fact-desc { font-size:12px; color:#81c784; line-height:1.4; }
+
+  .tribute-bg { background:linear-gradient(180deg,#061208,#02090400); }
+  .tribute-card { max-width:380px; margin:0 auto; background:rgba(6,30,8,0.7); border:1px solid rgba(102,187,106,0.2); border-radius:20px; overflow:hidden; }
+  .tribute-top { background:linear-gradient(135deg,#1b5e20,#0d3b10); padding:32px 24px; text-align:center; }
+  .guardian-emoji { font-size:64px; display:block; margin-bottom:12px; }
+  .tribute-title { font-family:'Playfair Display',serif; font-size:22px; color:#e8f5e9; margin-bottom:6px; }
+  .tribute-role { font-size:13px; color:#a5d6a7; letter-spacing:1px; }
+  .tribute-bottom { padding:24px; }
+  .tribute-stat { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid rgba(102,187,106,0.1); }
+  .tribute-stat:last-child { border-bottom:none; }
+  .tribute-stat-icon { font-size:24px; }
+  .tribute-stat-text { font-size:13px; color:#81c784; line-height:1.5; }
+  .tribute-stat-text strong { color:#c8e6c9; font-weight:600; }
+
+  .footer { background:#020a03; padding:40px 20px; text-align:center; position:relative; overflow:hidden; }
+  .footer-fireflies { position:absolute; inset:0; pointer-events:none; }
+  .firefly {
+    position:absolute;
+    width:4px; height:4px;
+    background:#ffd54f;
+    border-radius:50%;
+    animation:fireflyAnim ease-in-out infinite;
+    box-shadow:0 0 6px #ffd54f;
+  }
+  @keyframes fireflyAnim {
+    0%,100% { opacity:0; transform:translate(0,0); }
+    25% { opacity:1; }
+    50% { opacity:0.8; transform:translate(var(--dx,30px),var(--dy,-30px)); }
+    75% { opacity:0.5; }
+  }
+  .footer-logo { font-family:'Playfair Display',serif; font-size:28px; color:#2e7d32; margin-bottom:8px; }
+  .footer-text { font-size:13px; color:#4caf50; line-height:1.7; }
+  .footer-hearts { margin-top:20px; font-size:20px; letter-spacing:6px; animation:heartsGlow 2s ease-in-out infinite; }
+  @keyframes heartsGlow {
+    0%,100% { opacity:0.7; }
+    50% { opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="particles" id="particles"></div>
+  <div class="loader-jungle">
+    <div class="butterfly" style="display:flex;align-items:center;gap:2px;">
+      <div class="wing left"></div>
+      <div class="butterfly-body"></div>
+      <div class="wing right"></div>
+    </div>
+    <svg width="220" height="160" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        <path d="M40 160 Q42 120 38 80" stroke="#1b5e20" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M38 80 Q20 60 0 55" stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M38 80 Q15 75 10 65" stroke="#388e3c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M38 85 Q55 65 65 60" stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M39 92 Q60 85 70 80" stroke="#388e3c" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="0" cy="54" r="10" fill="#1b5e20" opacity="0.9"/>
+        <circle cx="10" cy="63" r="8" fill="#1b5e20" opacity="0.8"/>
+        <circle cx="64" cy="59" r="9" fill="#1b5e20" opacity="0.85"/>
+        <circle cx="70" cy="79" r="7" fill="#2e7d32" opacity="0.75"/>
+      </g>
+      <g>
+        <path d="M110 160 Q112 115 108 75" stroke="#1b5e20" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M108 75 Q80 50 60 45" stroke="#2e7d32" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M108 75 Q90 65 85 55" stroke="#388e3c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M108 75 Q135 50 155 45" stroke="#2e7d32" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M108 80 Q130 70 140 62" stroke="#388e3c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M109 85 Q108 60 110 40" stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="60" cy="43" r="12" fill="#1b5e20"/>
+        <circle cx="85" cy="53" r="10" fill="#1b5e20" opacity="0.9"/>
+        <circle cx="155" cy="43" r="12" fill="#1b5e20"/>
+        <circle cx="140" cy="60" r="10" fill="#1b5e20" opacity="0.9"/>
+        <circle cx="110" cy="38" r="11" fill="#1b5e20"/>
+      </g>
+      <g>
+        <path d="M185 160 Q183 120 187 80" stroke="#1b5e20" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M187 80 Q205 60 220 56" stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M187 80 Q210 75 215 65" stroke="#388e3c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M186 85 Q165 65 158 60" stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M185 92 Q165 83 155 78" stroke="#388e3c" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="220" cy="55" r="10" fill="#1b5e20" opacity="0.9"/>
+        <circle cx="215" cy="64" r="8" fill="#1b5e20" opacity="0.8"/>
+        <circle cx="158" cy="59" r="9" fill="#1b5e20" opacity="0.85"/>
+        <circle cx="155" cy="77" r="7" fill="#2e7d32" opacity="0.75"/>
+      </g>
+    </svg>
+  </div>
+  <div class="loader-progress"><div class="loader-bar"></div></div>
+  <div class="loader-text">Entrando al Tayrona...</div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="sky"></div>
+    <div class="stars" id="stars"></div>
+    <div class="sun"></div>
+
+    <div class="jungle-silhouette">
+      <svg width="100%" height="160" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 160 Q20 100 40 80 Q60 60 80 70 Q100 80 120 60 Q140 40 160 50 Q180 60 200 40 Q220 20 240 35 Q260 50 280 30 Q300 10 320 25 Q340 40 360 35 Q380 30 400 45 L400 160 Z" fill="#0a2010"/>
+        <path d="M0 160 Q30 120 60 100 Q80 88 100 95 Q120 102 140 85 Q160 68 180 75 Q200 82 220 65 Q240 48 260 55 Q280 62 300 50 Q320 38 340 52 Q360 66 380 58 Q390 54 400 60 L400 160 Z" fill="#0d2a14"/>
+        <path d="M0 160 L0 120 Q40 100 80 110 Q120 120 160 105 Q200 90 240 100 Q280 110 320 98 Q360 86 400 95 L400 160 Z" fill="#112e16" opacity="0.8"/>
+      </svg>
+    </div>
+
+    <div class="sea">
+      <div class="wave wave1"></div>
+      <div class="wave wave2"></div>
+      <div class="wave wave3"></div>
+    </div>
+
+    <!-- Animales hero -->
+    <div class="animal-hero toucan">
+      <svg width="55" height="65" viewBox="0 0 55 65" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="27" cy="38" rx="14" ry="18" fill="#1a1a1a"/>
+        <ellipse cx="27" cy="30" rx="10" ry="12" fill="#1a1a1a"/>
+        <ellipse cx="27" cy="25" rx="7" ry="7" fill="#1a1a1a"/>
+        <circle cx="30" cy="22" r="4" fill="white"/>
+        <circle cx="31" cy="22" r="2" fill="#1a1a1a"/>
+        <circle cx="31.5" cy="21.5" r="0.8" fill="white"/>
+        <path d="M27 24 Q38 20 42 25 Q40 30 27 28 Z" fill="#f57f17"/>
+        <path d="M27 24 Q38 20 42 25 Q42 22 38 19 Q33 17 27 24 Z" fill="#fbc02d"/>
+        <path d="M27 28 Q38 30 42 25 L27 28 Z" fill="#e65100"/>
+        <ellipse cx="27" cy="34" rx="9" ry="6" fill="#ff8f00"/>
+        <ellipse cx="20" cy="50" rx="4" ry="10" fill="#1a1a1a"/>
+        <ellipse cx="34" cy="50" rx="4" ry="10" fill="#1a1a1a"/>
+        <path d="M17 58 L20 60 L23 58" stroke="#f57f17" stroke-width="2" fill="none"/>
+        <path d="M31 58 L34 60 L37 58" stroke="#f57f17" stroke-width="2" fill="none"/>
+      </svg>
+    </div>
+
+    <div class="animal-hero morpho">
+      <svg width="70" height="45" viewBox="0 0 70 45" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="35" cy="23" rx="3" ry="14" fill="#212121" transform="rotate(-5 35 23)"/>
+        <path d="M35 15 Q10 5 5 20 Q8 35 35 30 Z" fill="#1565c0" opacity="0.9"/>
+        <path d="M35 15 Q10 5 5 20 Q8 35 35 30 Z" fill="#42a5f5" opacity="0.5"/>
+        <path d="M35 18 Q60 8 65 22 Q62 36 35 30 Z" fill="#1565c0" opacity="0.9"/>
+        <path d="M35 18 Q60 8 65 22 Q62 36 35 30 Z" fill="#42a5f5" opacity="0.5"/>
+        <ellipse cx="15" cy="25" rx="5" ry="4" fill="#0d47a1" opacity="0.7"/>
+        <ellipse cx="55" cy="24" rx="5" ry="4" fill="#0d47a1" opacity="0.7"/>
+        <line x1="34" y1="10" x2="30" y2="3" stroke="#212121" stroke-width="1.2"/>
+        <line x1="36" y1="10" x2="40" y2="3" stroke="#212121" stroke-width="1.2"/>
+        <circle cx="30" cy="2" r="2" fill="#212121"/>
+        <circle cx="40" cy="2" r="2" fill="#212121"/>
+      </svg>
+    </div>
+
+    <div class="animal-hero monkey">
+      <svg width="45" height="60" viewBox="0 0 45 60" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="22" cy="20" rx="12" ry="13" fill="#8d6e63"/>
+        <ellipse cx="12" cy="16" rx="6" ry="5" fill="#a1887f"/>
+        <ellipse cx="32" cy="16" rx="6" ry="5" fill="#a1887f"/>
+        <ellipse cx="12" cy="17" rx="4" ry="3.5" fill="#ffccbc"/>
+        <ellipse cx="32" cy="17" rx="4" ry="3.5" fill="#ffccbc"/>
+        <ellipse cx="22" cy="22" rx="8" ry="7" fill="#a1887f"/>
+        <circle cx="18" cy="19" r="3.5" fill="white"/>
+        <circle cx="26" cy="19" r="3.5" fill="white"/>
+        <circle cx="18.5" cy="19.5" r="2" fill="#1a1a1a"/>
+        <circle cx="26.5" cy="19.5" r="2" fill="#1a1a1a"/>
+        <circle cx="19" cy="19" r="0.8" fill="white"/>
+        <circle cx="27" cy="19" r="0.8" fill="white"/>
+        <ellipse cx="22" cy="25" rx="5" ry="3" fill="#ffccbc"/>
+        <ellipse cx="21" cy="24" rx="1.5" ry="1" fill="#9e9e9e"/>
+        <ellipse cx="23" cy="24" rx="1.5" ry="1" fill="#9e9e9e"/>
+        <path d="M22 32 Q22 50 22 58" stroke="#6d4c41" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M22 35 Q10 38 8 45" stroke="#6d4c41" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M22 35 Q34 38 36 45" stroke="#6d4c41" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M22 55 Q12 58 10 52 Q15 48 22 55" stroke="#6d4c41" stroke-width="3" fill="#8d6e63"/>
+      </svg>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">🌿 Parque Nacional Tayrona · Colombia</div>
+      <div class="hero-title">Feliz Día<br>del Padre</div>
+      <div class="hero-subtitle">al guardián de la selva</div>
+      <div class="hero-name">Papá</div>
+      <p class="hero-desc">
+        Toda una vida dedicada a proteger uno de los lugares más hermosos del mundo.
+        Este día es para ti. 🌊
+      </p>
+      <div class="scroll-hint">
+        <span>Explora</span>
+        <div class="scroll-arrow"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRIBUTO -->
+  <section class="tribute-bg">
+    <div class="section-label">🏅 Dedicatoria</div>
+    <h2 class="section-title">El Guardián del<br>Tayrona</h2>
+    <div class="section-divider"></div>
+    <div class="tribute-card">
+      <div class="tribute-top">
+        <span class="guardian-emoji">🌿</span>
+        <div class="tribute-title">Funcionario del Parque Tayrona</div>
+        <div class="tribute-role">Protector de la naturaleza · Toda una vida</div>
+      </div>
+      <div class="tribute-bottom">
+        <div class="tribute-stat">
+          <span class="tribute-stat-icon">🦜</span>
+          <div class="tribute-stat-text"><strong>Cuidador de cientos de especies</strong><br>Desde los tucanes hasta las tortugas carey</div>
+        </div>
+        <div class="tribute-stat">
+          <span class="tribute-stat-icon">🏖️</span>
+          <div class="tribute-stat-text"><strong>Protector de playas y selva</strong><br>Manteniendo el paraíso intacto para todos</div>
+        </div>
+        <div class="tribute-stat">
+          <span class="tribute-stat-icon">🌊</span>
+          <div class="tribute-stat-text"><strong>Defensor del Mar Caribe</strong><br>Donde la selva abraza el océano</div>
+        </div>
+        <div class="tribute-stat">
+          <span class="tribute-stat-icon">❤️</span>
+          <div class="tribute-stat-text"><strong>El mejor papá del mundo</strong><br>Tan fuerte como una ceiba, tan generoso como la selva</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANIMALES -->
+  <section class="animals-bg">
+    <div class="section-label">🦋 Fauna del Tayrona</div>
+    <h2 class="section-title">Los amigos<br>de tu trabajo</h2>
+    <div class="section-divider"></div>
+    <div class="animal-cards">
+      <div class="animal-card" onclick="showAnimal(0)">
+        <span class="animal-icon">🦋</span>
+        <div class="animal-name">Mariposa Morpho</div>
+        <div class="animal-latin">Morpho peleides</div>
+      </div>
+      <div class="animal-card" onclick="showAnimal(1)">
+        <span class="animal-icon">🐦</span>
+        <div class="animal-name">Tucán del Caribe</div>
+        <div class="animal-latin">Ramphastos sulfuratus</div>
+      </div>
+      <div class="animal-card" onclick="showAnimal(2)">
+        <span class="animal-icon">🐒</span>
+        <div class="animal-name">Mono Araña</div>
+        <div class="animal-latin">Ateles hybridus</div>
+      </div>
+      <div class="animal-card" onclick="showAnimal(3)">
+        <span class="animal-icon">🦎</span>
+        <div class="animal-name">Iguana Verde</div>
+        <div class="animal-latin">Iguana iguana</div>
+      </div>
+      <div class="animal-card" onclick="showAnimal(4)">
+        <span class="animal-icon">🐢</span>
+        <div class="animal-name">Tortuga Carey</div>
+        <div class="animal-latin">Eretmochelys imbricata</div>
+      </div>
+      <div class="animal-card" onclick="showAnimal(5)">
+        <span class="animal-icon">🦁</span>
+        <div class="animal-name">Puma</div>
+        <div class="animal-latin">Puma concolor</div>
+      </div>
+    </div>
+    <div id="animalInfo" class="animal-info">
+      <div class="animal-info-title" id="infoTitle"></div>
+      <div class="animal-info-text" id="infoText"></div>
+    </div>
+  </section>
+
+  <!-- DATOS -->
+  <section class="facts-bg">
+    <div class="section-label">📊 El Tayrona en cifras</div>
+    <h2 class="section-title">Tu parque,<br>en números</h2>
+    <div class="section-divider"></div>
+    <div class="facts-grid">
+      <div class="fact-card">
+        <div class="fact-number">15,000</div>
+        <div class="fact-desc">hectáreas de ecosistema protegido</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-number">300+</div>
+        <div class="fact-desc">especies de aves registradas</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-number">1,964</div>
+        <div class="fact-desc">año de creación como área protegida</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-number">3</div>
+        <div class="fact-desc">pisos térmicos: costa, selva y sierra</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENSAJE -->
+  <section class="message-bg">
+    <div class="section-label">💌 Para ti</div>
+    <h2 class="section-title">Con todo el amor</h2>
+    <div class="section-divider"></div>
+    <div class="message-card">
+      <span class="message-emoji">🌿💚</span>
+      <p class="message-text">
+        "Papá, así como tú cuidas cada árbol, cada animal y cada rincón del Tayrona,
+        nosotros te cuidamos a ti. Toda tu vida has dado lo mejor de ti a ese lugar mágico,
+        y ese amor por la naturaleza nos lo enseñaste a nosotros también.
+        <br><br>
+        Feliz Día del Padre, guardián del paraíso."
+      </p>
+      <div class="message-signature">— Con amor, tu familia 🌊</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-fireflies" id="fireflies"></div>
+    <div class="footer-logo">🌿 Tayrona</div>
+    <p class="footer-text">
+      Parque Nacional Natural Tayrona<br>
+      Sierra Nevada de Santa Marta, Colombia<br>
+      <em>Donde la selva abraza el mar Caribe</em>
+    </p>
+    <div class="footer-hearts">💚 💛 ❤️</div>
+  </div>
+
+</div>
+
+<script>
+const animalData = [
+  { name:"🦋 Mariposa Morpho Azul", text:"Una de las mariposas más hermosas del mundo. Sus alas azul metálico brillan como espejos en la selva del Tayrona. Es símbolo de transformación y belleza natural de la región Caribe." },
+  { name:"🐦 Tucán Pico Arcoíris", text:"Con su pico multicolor inconfundible, el tucán es uno de los íconos del Tayrona. Habita en los bosques húmedos y se alimenta de frutas tropicales. ¡Una de las más de 300 especies de aves del parque!" },
+  { name:"🐒 Mono Araña del Caribe", text:"En peligro crítico de extinción, el mono araña café habita exclusivamente en la región Caribe. El Tayrona es uno de sus últimos refugios. Su nombre viene de su postura cuando cuelga de los árboles." },
+  { name:"🦎 Iguana Verde", text:"Reina de las playas y manglares del Tayrona, la iguana verde puede llegar a medir casi 2 metros. Son excelentes nadadoras y trepadoras. Son sagradas para la cultura Kogui que habita la Sierra Nevada." },
+  { name:"🐢 Tortuga Carey", text:"Especie críticamente amenazada que regresa cada año a desovar en las playas del Tayrona. Su concha única la hizo víctima del comercio ilegal. El parque protege activamente sus nidadas." },
+  { name:"🦁 Puma del Tayrona", text:"Felino elusivo y poderoso, el puma es el gran depredador del Tayrona. Su presencia indica un ecosistema saludable. Raramente avistado, pero su huella en el barro delata su guardianía del parque." }
+];
+
+function showAnimal(idx) {
+  document.querySelectorAll('.animal-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.animal-card')[idx].classList.add('active');
+  const info = document.getElementById('animalInfo');
+  document.getElementById('infoTitle').textContent = animalData[idx].name;
+  document.getElementById('infoText').textContent = animalData[idx].text;
+  info.classList.remove('visible');
+  void info.offsetWidth;
+  info.classList.add('visible');
+}
+
+function makeStars() {
+  const s = document.getElementById('stars');
+  for(let i=0;i<60;i++){
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*50}%;animation-duration:${1.5+Math.random()*3}s;animation-delay:${Math.random()*3}s;`;
+    s.appendChild(star);
+  }
+}
+
+function makeParticles() {
+  const p = document.getElementById('particles');
+  for(let i=0;i<15;i++){
+    const el = document.createElement('div');
+    el.className = 'particle';
+    el.style.cssText = `left:${Math.random()*100}%;animation-duration:${3+Math.random()*5}s;animation-delay:${Math.random()*5}s;transform:rotate(${Math.random()*360}deg);`;
+    p.appendChild(el);
+  }
+}
+
+function makeFireflies() {
+  const f = document.getElementById('fireflies');
+  for(let i=0;i<20;i++){
+    const el = document.createElement('div');
+    el.className = 'firefly';
+    const dx = (Math.random()-0.5)*80;
+    const dy = (Math.random()-0.5)*60;
+    el.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;--dx:${dx}px;--dy:${dy}px;`;
+    f.appendChild(el);
+  }
+}
+
+makeParticles();
+makeStars();
+makeFireflies();
+
+setTimeout(() => {
+  const loader = document.getElementById('loader');
+  loader.classList.add('fade-out');
+  setTimeout(() => {
+    loader.style.display = 'none';
+    document.getElementById('main').classList.add('visible');
+  }, 800);
+}, 3500);
+</script>
+</body>
+</html>
